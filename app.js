@@ -22,10 +22,12 @@ document.getElementById("analyze").onclick = async () => {
 
   const data = await res.json();
 
-  document.getElementById("result").innerHTML = `
-    <b>Truth:</b> ${data.truth_score}<br>
-    <b>Bias:</b> ${data.bias_level}<br>
-    <b>Manipulation:</b> ${data.manipulation.join(", ")}<br><br>
-    ${data.explanation}
-  `;
+ document.getElementById("result").innerHTML = `
+  <b>Truth:</b> ${data.truth_score}<br>
+  <b>Bias:</b> ${data.bias_level}<br>
+  <b>Manipulation:</b> ${(data.manipulation || []).join(", ")}<br><br>
+  ${data.explanation}
+`;
+
 };
+
