@@ -1,55 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>VeriScope</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>VeriScope — Truth Intelligence</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="app">
 
-  <div class="left">
+  <header>
     <h1>VeriScope</h1>
+    <p>AI-powered truth & manipulation analysis</p>
+  </header>
 
+  <div class="input-panel">
+    <label>Content Type</label>
     <div class="modes">
-      <button class="mode active" data-mode="news">News</button>
-      <button class="mode" data-mode="social">Social</button>
-      <button class="mode" data-mode="speech">Speech</button>
+      <button class="mode active" data-mode="news">📰 News</button>
+      <button class="mode" data-mode="social">📱 Social</button>
+      <button class="mode" data-mode="speech">🎤 Speech</button>
+      <button class="mode" data-mode="chat">💬 Chat / Messages</button>
     </div>
 
-    <textarea id="input" placeholder="Paste text, news, tweet or speech here..."></textarea>
-    <button id="analyze">Analyze</button>
+    <textarea id="input" placeholder="Paste text, messages, articles, or speeches here..."></textarea>
 
-    <div class="history">
-      <h3>Scan History</h3>
-      <div id="historyList"></div>
-    </div>
+    <button id="analyze" class="analyze-btn">Analyze</button>
   </div>
 
-  <div class="right">
+  <div class="results-grid">
+
     <div class="card">
       <h3>Truth Score</h3>
       <div class="bar">
         <div id="truthBar"></div>
       </div>
-      <div id="truthValue">–</div>
+      <div id="truthValue">—</div>
     </div>
 
     <div class="card">
       <h3>Bias Level</h3>
-      <div id="bias">–</div>
+      <div id="bias">—</div>
     </div>
 
     <div class="card">
       <h3>Manipulation</h3>
-      <div id="tags"></div>
+      <ul id="manipulation"></ul>
     </div>
 
-    <div class="card">
-      <h3>Explanation</h3>
-      <div id="explanation"></div>
+    <div class="card wide">
+      <h3>AI Explanation</h3>
+      <p id="explanation">Paste something and click Analyze.</p>
     </div>
+
   </div>
 
 </div>
@@ -57,3 +61,4 @@
 <script src="app.js"></script>
 </body>
 </html>
+
