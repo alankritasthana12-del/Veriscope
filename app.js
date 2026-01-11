@@ -20,7 +20,12 @@ document.getElementById("analyze").onclick = async () => {
     body: JSON.stringify({ text, mode })
   });
 
-  const data = await res.json();
+ const data = await res.json();
+if (data.error) {
+  document.getElementById("result").innerText = "AI Error: " + data.error;
+  return;
+}
+
 
  document.getElementById("result").innerHTML = `
   <b>Truth:</b> ${data.truth_score}<br>
@@ -30,4 +35,5 @@ document.getElementById("analyze").onclick = async () => {
 `;
 
 };
+
 
