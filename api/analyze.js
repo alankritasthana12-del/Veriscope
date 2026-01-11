@@ -5,13 +5,9 @@ export default async function handler(req, res) {
     const prompt = `
 You are VeriScope — an information intelligence system.
 
-Analyze the following ${mode} content for:
-- Bias
-- Emotional manipulation
-- Persuasion techniques
-- Narrative intent
+Analyze the following ${mode} content.
 
-Return ONLY valid JSON:
+Respond ONLY in strict JSON:
 {
   "truth_score": 0-100,
   "bias_level": "Neutral | Slight | Strong | Extreme",
@@ -19,8 +15,8 @@ Return ONLY valid JSON:
   "explanation": "plain English explanation"
 }
 
-Content:
-"""${text}"""
+Text:
+${text}
 `;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -37,10 +33,23 @@ Content:
     });
 
     const data = await response.json();
-    const raw = data.choices[0].message.content;
+    const content = data.choices?.[0]?.message?.content;
 
-    const json = raw.substring(raw.indexOf("{"), raw.lastIndexOf("}") + 1);
-    res.status(200).json(JSON.parse(json));
+    if (!content) {
+      return res.status(500).json({ error: "Groq returned empty response" });
+    }
+
+    // Hard JSON extraction
+    const start = content.indexOf("{");
+    const end = content.lastIndexOf("}");
+
+    if (start === -1 || end === -1) {
+      return res.status(500).json({ error: "Groq returned non-JSON output", raw: content });
+    }
+
+    const parsed = JSON.parse(content.slice(start, end + 1));
+
+    res.status(200).json(parsed);
 
   } catch (err) {
     res.status(500).json({ error: err.message });
