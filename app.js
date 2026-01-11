@@ -9,10 +9,11 @@ document.querySelectorAll(".mode").forEach(b => {
 });
 
 document.getElementById("analyze").onclick = async () => {
-  const text = document.getElementById("input").value;
+  const input = document.getElementById("input");
+  const text = input.value.trim();
   if (!text) return alert("Paste text");
 
-  document.getElementById("result").innerText = "Analyzing...";
+  document.getElementById("explanation").innerText = "Analyzing...";
 
   const res = await fetch("/api/analyze", {
     method: "POST",
@@ -20,20 +21,40 @@ document.getElementById("analyze").onclick = async () => {
     body: JSON.stringify({ text, mode })
   });
 
- const data = await res.json();
-if (data.error) {
-  document.getElementById("result").innerText = "AI Error: " + data.error;
-  return;
-}
+  const data = await res.json();
 
+  // error block
+  if (data.error) {
+    document.getElementById("explanation").innerText = "AI Error: " + data.error;
+    return;
+  }
 
- document.getElementById("result").innerHTML = `
-  <b>Truth:</b> ${data.truth_score}<br>
-  <b>Bias:</b> ${data.bias_level}<br>
-  <b>Manipulation:</b> ${(data.manipulation || []).join(", ")}<br><br>
-  ${data.explanation}
-`;
+  // ===== SUCCESS BLOCK =====
 
+  // Truth bar
+  document.getElementById("truthBar").style.width = data.truth_score + "%";
+  document.getElementById("truthValue").innerText = data.truth_score;
+
+  // Bias
+  document.getElementById("bias").innerText = data.bias_level;
+
+  // Manipulation tags
+  const tags = document.getElementById("tags");
+  tags.innerHTML = "";
+  (data.manipulation || []).forEach(t => {
+    const span = document.createElement("span");
+    span.innerText = t;
+    span.style.marginRight = "6px";
+    span.style.color = "#38bdf8";
+    tags.appendChild(span);
+  });
+
+  // Explanation
+  document.getElementById("explanation").innerText = data.explanation;
+
+  // History
+  const h = document.createElement("div");
+  h.innerText = text.slice(0, 60);
+  h.onclick = () => { input.value = text; };
+  document.getElementById("historyList").prepend(h);
 };
-
-
