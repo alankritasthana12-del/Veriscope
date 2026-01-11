@@ -1,22 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<title>VeriScope</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>VeriScope</h1>
 
-<div>
-  <button class="mode active" data-mode="news">News</button>
-  <button class="mode" data-mode="social">Social</button>
-  <button class="mode" data-mode="speech">Speech</button>
+<div class="app">
+
+  <div class="left">
+    <h1>VeriScope</h1>
+
+    <div class="modes">
+      <button class="mode active" data-mode="news">News</button>
+      <button class="mode" data-mode="social">Social</button>
+      <button class="mode" data-mode="speech">Speech</button>
+    </div>
+
+    <textarea id="input" placeholder="Paste text, news, tweet or speech here..."></textarea>
+    <button id="analyze">Analyze</button>
+
+    <div class="history">
+      <h3>Scan History</h3>
+      <div id="historyList"></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="card">
+      <h3>Truth Score</h3>
+      <div class="bar">
+        <div id="truthBar"></div>
+      </div>
+      <div id="truthValue">–</div>
+    </div>
+
+    <div class="card">
+      <h3>Bias Level</h3>
+      <div id="bias">–</div>
+    </div>
+
+    <div class="card">
+      <h3>Manipulation</h3>
+      <div id="tags"></div>
+    </div>
+
+    <div class="card">
+      <h3>Explanation</h3>
+      <div id="explanation"></div>
+    </div>
+  </div>
+
 </div>
-
-<textarea id="input" placeholder="Paste text here"></textarea>
-<br>
-<button id="analyze">Analyze</button>
-
-<div id="result"></div>
 
 <script src="app.js"></script>
 </body>
