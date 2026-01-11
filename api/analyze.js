@@ -3,11 +3,10 @@ export default async function handler(req, res) {
     const { text, mode } = req.body;
 
     const prompt = `
-You are VeriScope — an information intelligence system.
+You are VeriScope.
 
-Analyze the following ${mode} content.
+Analyze the following ${mode} content and return ONLY valid JSON:
 
-Respond ONLY in strict JSON:
 {
   "truth_score": 0-100,
   "bias_level": "Neutral | Slight | Strong | Extreme",
@@ -26,25 +25,25 @@ ${text}
         "Authorization": "Bearer " + process.env.GROQ_API_KEY
       },
       body: JSON.stringify({
-        model: "llama3-70b-8192",
+        model: "mixtral-8x7b-32768",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.2
       })
     });
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
 
-    if (!content) {
-      return res.status(500).json({ error: "Groq returned empty response" });
+    if (!data.choices) {
+      return res.status(500).json({ error: "Groq error", data });
     }
 
-    // Hard JSON extraction
+    const content = data.choices[0].message.content;
+
     const start = content.indexOf("{");
     const end = content.lastIndexOf("}");
 
     if (start === -1 || end === -1) {
-      return res.status(500).json({ error: "Groq returned non-JSON output", raw: content });
+      return res.status(500).json({ error: "Model returned non-JSON", content });
     }
 
     const parsed = JSON.parse(content.slice(start, end + 1));
@@ -55,3 +54,4 @@ ${text}
     res.status(500).json({ error: err.message });
   }
 }
+
